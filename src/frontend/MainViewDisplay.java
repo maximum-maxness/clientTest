@@ -1,14 +1,11 @@
 package frontend;
 
-import backend.*;
 
 import java.awt.*;
-import java.io.*;
 import javax.swing.*;
 
 public class MainViewDisplay extends JFrame {
 
-    BackendModelSetup theBackendModel;
 
     JLabel textContentLabel;
     JTextArea textContentField;
@@ -18,8 +15,7 @@ public class MainViewDisplay extends JFrame {
     
     String filePath;
 
-    public MainViewDisplay(BackendModelSetup aBackend) {
-        this.theBackendModel = aBackend;
+    public MainViewDisplay() {
         this.initComponents();
     }
 
@@ -88,38 +84,6 @@ public class MainViewDisplay extends JFrame {
         mainDisplayPane.add(this.saveResultToFileButton, c);
 
         this.pack();
-    }
-
-    void updateTextContentField() {
-        String text;
-        if (this.theBackendModel.theTextFile == null) {
-            text = "";
-        } else {
-            text = this.theBackendModel.theTextFile.fileContent;
-        }
-        this.textContentField.setText(text);
-
-    }
-    
-
-
-    String showChooseFileDialog() {
-        JFileChooser jfc = new JFileChooser();
-        int status = jfc.showOpenDialog(this);
-        if (status == JFileChooser.APPROVE_OPTION) {
-            File theFile = jfc.getSelectedFile();
-            String thePath = theFile.getAbsolutePath();
-            return thePath;
-        }
-
-        return null;
-    }
-    
-    String getFilePath(Boolean b) { //true if openDialog. false if saveDIalog;
-        if (b) { //if called by openDialog
-            this.filePath = this.showChooseFileDialog();
-        }
-        return this.filePath;
     }
 }
 
