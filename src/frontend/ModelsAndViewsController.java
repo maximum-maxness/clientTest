@@ -20,7 +20,6 @@ public class ModelsAndViewsController {
 
     String text = "";
     String temp = "";
-    Scanner kbScanner = new Scanner(System.in);
     Socket socket = new Socket("127.0.0.1", 12445);
     Scanner socketScanner = new Scanner(socket.getInputStream());
 
