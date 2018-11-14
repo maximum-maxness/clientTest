@@ -5,6 +5,7 @@
  */
 package runner;
 
+import frontend.BackendModelSetup;
 import frontend.MainViewDisplay;
 import frontend.ModelsAndViewsController;
 import java.io.IOException;
@@ -21,7 +22,8 @@ public class TheApp implements Runnable {
     public void run() {
         MainViewDisplay theMainViewDisplay = new MainViewDisplay();
         try {
-            ModelsAndViewsController theMainViewsController = new ModelsAndViewsController(theMainViewDisplay);
+            BackendModelSetup theBackendModel = new BackendModelSetup();
+            ModelsAndViewsController theMainViewsController = new ModelsAndViewsController(theBackendModel, theMainViewDisplay);
         } catch (IOException ex) {
             Logger.getLogger(TheApp.class.getName()).log(Level.SEVERE, null, ex);
         }

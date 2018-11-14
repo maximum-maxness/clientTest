@@ -13,7 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ModelsAndViewsController {
-
+    
+    BackendModelSetup theBackendModel;
     MainViewDisplay theMainViewDisplay;
     public String openFilePath;
 
@@ -54,9 +55,9 @@ public class ModelsAndViewsController {
 
     }
 
-    public ModelsAndViewsController(MainViewDisplay aMainViewDisplay) throws IOException {
+    public ModelsAndViewsController(BackendModelSetup aBackendModelSetup, MainViewDisplay aMainViewDisplay) throws IOException {
         this.theMainViewDisplay = aMainViewDisplay;
-
+        this.theBackendModel = aBackendModelSetup;
         this.initController();
     }
 

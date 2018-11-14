@@ -11,4 +11,8 @@ package backend;
  */
 public class ClientClass {
     
+    public ClientClass(){
+        
+    }
+    
 }
