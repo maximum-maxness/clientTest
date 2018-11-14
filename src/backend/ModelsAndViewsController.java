@@ -1,6 +1,6 @@
-package frontend;
+package backend;
 
-import frontend.MainViewDisplay;
+import backend.MainViewDisplay;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

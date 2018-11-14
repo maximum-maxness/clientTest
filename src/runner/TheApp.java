@@ -5,8 +5,8 @@
  */
 package runner;
 
-import frontend.MainViewDisplay;
-import frontend.ModelsAndViewsController;
+import backend.MainViewDisplay;
+import backend.ModelsAndViewsController;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
