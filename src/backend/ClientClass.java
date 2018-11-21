@@ -25,6 +25,8 @@ import java.util.logging.Logger;
 public class ClientClass {
 
     public Socket socket;
+    public BufferedReader bf;
+    public PrintStream ps;
     public SocketAddress socketAdd;
     public InetSocketAddress basicAdd;
     public int port;
@@ -72,8 +74,11 @@ public class ClientClass {
     public void connect() {
         try {
             this.socket.connect(this.socketAdd);
+            this.socket.setKeepAlive(true);
             this.inputStream = this.socket.getInputStream();
             this.outputStream = this.socket.getOutputStream();
+            this.bf = new BufferedReader(new InputStreamReader(this.inputStream));
+            this.ps = new PrintStream(this.outputStream);
             System.out.println("Connected to Server!");
 //            if (getReplyFromServer() == this.SERVER_REPLY_READY) {
 //                System.out.println(this.SERVER_REPLY_READY + " Server is Ready!");
@@ -102,10 +107,10 @@ public class ClientClass {
     public void sendDataToServer(String data) {
         sendReplyToServer(this.UPLOAD_TO_SERVER);
 
-        if (getReplyFromServer() == this.SERVER_REPLY_READY) {
+        if (getReplyFromServer().equals(this.SERVER_REPLY_READY)) {
             sendReplyToServer(data);
             sendReplyToServer(this.FINISHED_UPLOAD);
-            if (getReplyFromServer() == this.SERVER_REPLY_FINSIHED) {
+            if (getReplyFromServer().equals(this.SERVER_REPLY_FINSIHED)) {
                 System.out.println("Finished Upload with no Errors!");
             } else {
                 System.err.println("Error: Server didn't reply with ready.. Continuing Anyways..");
@@ -117,9 +122,11 @@ public class ClientClass {
 
     public String getDataFromServer() {
         sendReplyToServer(this.DOWNLOAD_FROM_SERVER);
-        if (getReplyFromServer() == this.SERVER_REPLY_BEGIN_TRANSFER) {
+        if (getReplyFromServer().equals(this.SERVER_REPLY_BEGIN_TRANSFER)) {
+            System.out.println("true");
             String text = getReplyFromServer();
-            if (getReplyFromServer() == this.SERVER_REPLY_FINSIHED) {
+            System.out.println("text is: " + text);
+            if (getReplyFromServer().equals(this.SERVER_REPLY_FINSIHED)) {
                 System.out.println("Finished Download with no Errors!");
             } else {
                 System.err.println("Error: Server didn't reply with finished transfer.. Continuing Anyways..");
@@ -133,11 +140,8 @@ public class ClientClass {
 
     private String getReplyFromServer() {
         try {
-            BufferedReader bf;
-
-            bf = new BufferedReader(new InputStreamReader(this.inputStream));
-            String text = bf.readLine();
-            bf.close();
+            String text = this.bf.readLine();
+            //bf.close();
             System.out.println("Recieved: " + text);
             return text;
         } catch (IOException ex) {
@@ -147,15 +151,8 @@ public class ClientClass {
     }
 
     private void sendReplyToServer(String replyToSend) {
-        PrintStream ps;
-//        try {
-        ps = new PrintStream(this.outputStream);
-//        } catch (IOException ex) {
-//            System.err.println("Can't get output stream!");
-//            return;
-//        }
-        ps.println(replyToSend);
-        ps.close();
+        this.ps.println(replyToSend);
+        //ps.close();
         System.out.println("Sent: " + replyToSend);
     }
 
