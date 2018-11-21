@@ -18,22 +18,12 @@ public class ModelsAndViewsController {
     MainViewDisplay theMainViewDisplay;
     public String openFilePath;
 
-    String text = "";
-    String temp = "";
-    Socket socket = new Socket("127.0.0.1", 12445);
-    Scanner socketScanner = new Scanner(socket.getInputStream());
-
     private class GetTextFromServerAction implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            try {
-                temp = socketScanner.nextLine();
-                theMainViewDisplay.textContentField.setText(temp);
-                System.out.println("worked");
-            } catch (NoSuchElementException ex) {
-
-            }
+            String text = theBackendModel.theClient.getDataFromServer();
+            theMainViewDisplay.textContentField.setText(text);
         }
     }
 
@@ -41,15 +31,8 @@ public class ModelsAndViewsController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            text = theMainViewDisplay.textContentField.getText();
-            PrintStream printSocket;
-            try {
-                printSocket = new PrintStream(socket.getOutputStream());
-                printSocket.println(text);
-                System.out.println("Sent " + text);
-            } catch (IOException ex) {
-                Logger.getLogger(ModelsAndViewsController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            String text = theMainViewDisplay.textContentField.getText();
+            theBackendModel.theClient.sendDataToServer(text);
         }
 
     }
