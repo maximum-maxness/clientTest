@@ -80,13 +80,6 @@ public class ClientClass {
             this.bf = new BufferedReader(new InputStreamReader(this.inputStream));
             this.ps = new PrintStream(this.outputStream);
             System.out.println("Connected to Server!");
-//            if (getReplyFromServer() == this.SERVER_REPLY_READY) {
-//                System.out.println(this.SERVER_REPLY_READY + " Server is Ready!");
-//                return;
-//            } else {
-//                System.err.println("Server may not be ready.. continuing anyways");
-//                return;
-//            }
         } catch (IOException ex) {
             System.err.println("Cant Connect to Server @" + this.ip + ";" + this.port);
             Logger.getLogger(ClientClass.class.getName()).log(Level.SEVERE, null, ex);
@@ -97,6 +90,8 @@ public class ClientClass {
     public void disconnect() {
         try {
             sendReplyToServer(this.DISCONNECT_FROM_SERVER);
+            this.bf.close();
+            this.ps.close();
             this.socket.close();
         } catch (IOException ex) {
             System.err.println("Error Disconnecting!");
@@ -141,7 +136,6 @@ public class ClientClass {
     private String getReplyFromServer() {
         try {
             String text = this.bf.readLine();
-            //bf.close();
             System.out.println("Recieved: " + text);
             return text;
         } catch (IOException ex) {
@@ -152,7 +146,6 @@ public class ClientClass {
 
     private void sendReplyToServer(String replyToSend) {
         this.ps.println(replyToSend);
-        //ps.close();
         System.out.println("Sent: " + replyToSend);
     }
 
