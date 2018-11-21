@@ -29,8 +29,8 @@ public class ClientClass {
     public InetSocketAddress basicAdd;
     public int port;
     public String ip;
-    private PrintStream ps;
-    private BufferedReader bf;
+    private InputStream inputStream;
+    private OutputStream outputStream;
 
     private final String UPLOAD_TO_SERVER = "202";
     private final String DOWNLOAD_FROM_SERVER = "205";
@@ -72,9 +72,16 @@ public class ClientClass {
     public void connect() {
         try {
             this.socket.connect(this.socketAdd);
-            this.bf = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
-            this.ps = new PrintStream(this.socket.getOutputStream());
+            this.inputStream = this.socket.getInputStream();
+            this.outputStream = this.socket.getOutputStream();
             System.out.println("Connected to Server!");
+//            if (getReplyFromServer() == this.SERVER_REPLY_READY) {
+//                System.out.println(this.SERVER_REPLY_READY + " Server is Ready!");
+//                return;
+//            } else {
+//                System.err.println("Server may not be ready.. continuing anyways");
+//                return;
+//            }
         } catch (IOException ex) {
             System.err.println("Cant Connect to Server @" + this.ip + ";" + this.port);
             Logger.getLogger(ClientClass.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,8 +92,6 @@ public class ClientClass {
     public void disconnect() {
         try {
             sendReplyToServer(this.DISCONNECT_FROM_SERVER);
-            this.bf.close();
-            this.ps.close();
             this.socket.close();
         } catch (IOException ex) {
             System.err.println("Error Disconnecting!");
@@ -128,7 +133,11 @@ public class ClientClass {
 
     private String getReplyFromServer() {
         try {
-            String text = this.bf.readLine();
+            BufferedReader bf;
+
+            bf = new BufferedReader(new InputStreamReader(this.inputStream));
+            String text = bf.readLine();
+            bf.close();
             System.out.println("Recieved: " + text);
             return text;
         } catch (IOException ex) {
@@ -138,7 +147,15 @@ public class ClientClass {
     }
 
     private void sendReplyToServer(String replyToSend) {
-        this.ps.println(replyToSend);
+        PrintStream ps;
+//        try {
+        ps = new PrintStream(this.outputStream);
+//        } catch (IOException ex) {
+//            System.err.println("Can't get output stream!");
+//            return;
+//        }
+        ps.println(replyToSend);
+        ps.close();
         System.out.println("Sent: " + replyToSend);
     }
 
